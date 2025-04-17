@@ -1,26 +1,25 @@
 from django.shortcuts import render
-from django.views import View  # Import the base View class
-from .functions.scrape import get_products
-from .models import Product  # Import the Product model
+from django.views import View
+from .functions.scrape import Scraper
+from .models import Product
 
-# Create your views here.
-class ProductListView(View):  # Inherit from View
+class ProductListView(View):
     def get(self, request):
-        products = get_products()
+        # Call the scraping function to get product data
+        # scraper = Scraper("https://row.representclo.com/collections/mens-new-arrivals-all?page=")
+        # scraped_products = scraper.get_products()
 
-        for product in products:
-            # Assuming you have a Product model to save the scraped data
-            Product.objects.create(
-                name=product['title'],
-                description=product.get('description', ''),
-                price=product['price']
-            )
+        # # Save the scraped data to the database
+        # for product in scraped_products:
+        #     Product.objects.update_or_create(
+        #         name=product['title'],  # Match by name
+        #         defaults={
+        #             'name': product['title'],
+        #             'price': product['price'],
+        #             'image': product['image_url']
+        #         }
+        #     )
+
         # Fetch all products from the database to display
-            
-        # Here you would typically fetch products from the database
-        products = [
-            {'name': 'Product 1', 'price': 10.00},
-            {'name': 'Product 2', 'price': 20.00},
-            {'name': 'Product 3', 'price': 30.00},
-        ]
+        products = Product.objects.all()
         return render(request, 'shop/index.html', {'products': products})

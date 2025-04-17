@@ -39,6 +39,26 @@
             <img src="https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/https://row.representclo.com/cdn/shop/files/Desktop_Hero_Banner_Image_02_ac96fcd6-850b-44e6-a705-e74e352ab6d1.jpg?v=1744641260&width=3000%201x,https://sfycdn.speedsize.com/d31641c5-60cb-4a0b-8662-59094f81bb6e/https://row.representclo.com/cdn/shop/files/Desktop_Hero_Banner_Image_02_ac96fcd6-850b-44e6-a705-e74e352ab6d1.jpg?v=1744641260&width=3000%202x" alt="">
         </div>
     </section>
+
+    <!-- Product Section -->
+    <section class="product-section container mt-5">
+        <h2 class="text-center mb-4">Our Products</h2>
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-4 mb-4">
+                <a class="card">
+                    <img src="{{ product.image }}" class="card-img-top" alt="{{ product.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">${{ product.price }}</p>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <p class="text-center">No products available at the moment.</p>
+            {% endfor %}
+        </div>
+    </section>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 </body>
 </html>

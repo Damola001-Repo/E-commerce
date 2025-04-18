@@ -15,32 +15,31 @@ class Scraper:
         # Set up Chrome options
         self.chrome_options = Options()
         self.chrome_options.add_argument("--disable-search-engine-choice-screen")
+        # Add this line to the Chrome options setup
+        self.chrome_options.add_argument("--ignore-certificate-errors")
+        self.chrome_options.add_argument("--disable-web-security")
+        self.chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
 
         # Set up the ChromeDriver service
         self.service = Service(r'C:\Users\damol\Desktop\PythonProject\kingsuit\kingsuit\shop\functions\chromedriver-win64\chromedriver.exe')
 
     def get_products(self):
         # Initialize the driver only when this method is called
-        self.driver = webdriver.Chrome(service=self.service, options=self.chrome_options)
 
-        product_data = []  # List to store all products
+        # Open the website
         num = 1  # Start from page 1
+        # Loop through the pages until there are no more products
 
-        while True:  # Infinite loop, will break when no products are found
-            print(f"Scraping page {num}...")
-            self.driver.get(self.url + str(num))
+        while num < 100:
+            self.driver = webdriver.Chrome(service=self.service, options=self.chrome_options)
+            self.driver.get(self.url+str(num))
             products = self.driver.find_elements(By.CSS_SELECTOR, "a.flex.flex-col.w-full.group")
-
-            # Break the loop if no products are found
-            if not products:
-                print(f"No products found on page {num}. Stopping.")
-                break
-
-            print(f"Number of products found on page {num}: {len(products)}")
+            print(f"Number of products found: {len(products)}")
+            product_data = []
 
             for product in products:
                 # Extract product details
-                title = product.find_element(By.CSS_SELECTOR, "h3.font-global_weight.text-xs").text
+                title = product.find_element(By.CSS_SELECTOR,"h3.font-global_weight.text-xs").text
                 price = product.find_element(By.CSS_SELECTOR, "span.uppercase.font-normal").text
                 image_url = product.find_element(By.CSS_SELECTOR, "img.block.object-cover.h-full.w-full").get_attribute("src")
 
@@ -50,15 +49,15 @@ class Scraper:
                     "price": price.strip('$'),
                     "image_url": image_url
                 })
+            self.driver.quit()
+            num = num + 1
 
-            num += 1  # Go to the next page
-
-        self.driver.quit()  # Close the driver after scraping
-        return product_data
+            # self.driver.quit()  # Close the driver after scraping
+            return product_data
 
 
 if __name__ == "__main__":
-    scraper = Scraper("https://row.representclo.com/collections/mens-new-arrivals-all?page=1")
+    scraper = Scraper("https://row.representclo.com/collections/mens-new-arrivals-all?page=")
     
     products = scraper.get_products()
     print(json.dumps(products, indent=4))  # Print the product data in a readable format

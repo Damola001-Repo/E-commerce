@@ -23,3 +23,9 @@ class ProductListView(View):
         # Fetch all products from the database to display
         products = Product.objects.all()
         return render(request, 'shop/index.html', {'products': products})
+
+class ProductDetailView(View):
+    def get(self, request, product_id):
+        # Fetch the product by ID
+        product = Product.objects.get(id=product_id)
+        return render(request, 'shop/detail.html', {'product': product})
